@@ -1,0 +1,214 @@
+﻿@model IEnumerable<Project1.Models.Recipe>
+
+@{
+    ViewBag.Title = "Recipes";
+}
+
+<h2 style="text-align:center; color:sienna">Recipes</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table id="data" class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ingridients)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Image)
+            </th>
+            <th>
+                <p>Difficulty (1-10)</p>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Ingridients)
+                </td>
+                <td>
+                    <img src="@item.Image" style="max-width:100px" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Difficulty)
+                </td>
+                <td>
+                    @if (User.IsInRole("Administrator"))
+                    {
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+                    } |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id })
+                    |
+                    @if (User.IsInRole("Administrator"))
+                    {
+                        <button del-id="@item.Id" class="btn-link js-delete">Delete</button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+<button onclick="topFunction()" id="myBtn"><img id="butt" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAS1BMVEX///8AAAAbGxtbW1tYWFhdXV07OzsvLy8sLCyVlZXy8vJlZWV2dnZra2u0tLRgYGCcnJzFxcXo6Og0NDT39/e8vLypqalTU1PT09Pyabi0AAADQklEQVR4nO3da1PbMBCF4RhC7gkkEOD//1IappCLLWl3JUd7xHk/MmXQ0xPbmWmbTiaMMcYYY4wxxhhjjDHGGGN/sd12Pp9vd7WPMVrv3U/vtY8yTs/duafahxmjj+6yj9rHKd9Td91j7QOV7hbYHLEPbIw4BGyK+DgI7Lpp7YOVanjBhh4a0yCwkRXDCzZyLYauwWZWjC/YwIqpBeFXTC8IvqIMCEyUvEShX6jSBWFXlC8IuqJmQcgVY2/VmlhRu+ApqLfhumsQcEXLgqdgrkUrEIZoB4IQc4AQRNtN5pz7203eggAr6h/0YCvmL3jK8Yrha3C76H1pscVbMbzgdPLQ+9pD5DfE6YrhA//bZEiIRowtGBBiEePAgBCJGH2JToLC5Pe5KbFgWIiyYvhB/7NEUIixYnLBmBBhxfSCUaH/FQULxoXeV5QtEBX6XlG0YEroeUUhMCX0SxS/vFJCr0TpggKhT6LiBpEWerzdyBcUCf2tKHnQ/yYReltRs6BQ6GtF5e+3TOhpRd2CYqGfFbVAsdALUQ2UC30Q9UCF0APRcjtQCOvfbgwL6oS1VwwDYz9eJYwQ7/DXGV4sC2qFEeJLWU6/lWlBtTBCXJXkDLQ0LagXhonLcpjB+n9KJlnQIAwSF6UogWwLWoRBYhlIqMBlmL6JG4Qh4rgX4rBQ8CC2CAPEkW81RqBNOEzMJSRa24BG4RBxnQdItrcBrcIB4j7n+JJmNz9Q+E7RKuwRZ/ajCztYFswQ3hIP1oPL+7z8ec/S77ILr/4NePdpO7Suw/mFKn8bnCG8eLM/u8OC3+2/76ivS8WTKUc4WS1fT9+xHv0mc9mb8rmbJTy1etP9+ruXLXQfhfhRiB+F+FGIH4X4UYgfhfhRiB+F+FGIH4X4UYgfhfhRiB+F+FGIH4X4UYgfhfhRiB+F+FGIH4X4UYgfhfhRiB+F+FGIH4X4UYgfhfhRiB+F+FGIH4X4UYgfhfhRiB+F+FGIH4X4tS+8/ai+e3x43n3b9ISb2kcq3LEnPNY+Uul6wtoHKt7uBrirfaDyXX+269ifs1qly/87dlv7MOO0a/kl+r/jZjafbZq7izLGGGOMMcYYY4wxxhhjjIn6AubCHjX3PKN3AAAAAElFTkSuQmCC" /></button>
+
+
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            var table = $("#data").DataTable();
+            $("#data .js-delete").on("click", function () {
+                var button = $(this);
+                bootbox.confirm("Do you want to delete this recipe?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/Recipes/Delete/" + button.attr("del-id"),
+                            method: "GET",
+                            success: function () {
+                                table.row(button.parents("tr")).remove().draw();
+                            },
+                            error: function err() {
+                                console.log(err);
+                            }
+                        });
+                    }
+                });
+            });
+        });
+
+
+        mybutton = document.getElementById("myBtn");
+
+        window.onscroll = function () { scrollFunction() };
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                mybutton.style.display = "block";
+            } else {
+                mybutton.style.display = "none";
+            }
+        }
+
+
+        function topFunction() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+
+    </script>
+}
+
+<style>
+    .pagination > li > a, .pagination > li > span{
+        color:sienna;
+    }
+    .pagination > li > a:hover{
+        color:burlywood;
+        background-color:white;
+    }
+    #data > tbody > tr > td:nth-child(4), #data > tbody > tr > td:nth-child(1) {
+        text-align: center;
+    }
+    .table > caption + thead > tr:first-child > th, .table > colgroup + thead > tr:first-child > th, .table > thead:first-child > tr:first-child > th, .table > caption + thead > tr:first-child > td, .table > colgroup + thead > tr:first-child > td, .table > thead:first-child > tr:first-child > td {
+        text-align: center;
+    }
+    #butt {
+        width: inherit;
+        display: block;
+        max-width: 30px;
+    }
+
+    #myBtn {
+        background-color: cornsilk;
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 15px;
+        z-index: 99;
+        border: none;
+        outline: none;
+        cursor: pointer;
+    }
+    a, th, td, #data_wrapper > div:nth-child(1), .pagination > li:first-child > a, .pagination > li:first-child > span, #data_next > a, #data_info {
+        color: sienna;
+    }
+
+    body > div.container.body-content > p {
+        text-align: center;
+    }
+
+    body {
+        background-color: cornsilk;
+    }
+
+    .pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus {
+        background-color: sienna;
+    }
+
+        .pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus {
+            border-color: white;
+        }
+
+    a:hover {
+        color: sienna;
+        text-decoration: none;
+    }
+
+    #data > tbody > tr > td:nth-child(5) > a:nth-child(2):hover {
+        color: burlywood;
+    }
+
+    #data > tbody > tr > td:nth-child(5) > a:nth-child(1):hover, body > div.container.body-content > p > a:hover {
+        color: burlywood;
+    }
+
+    #data > tbody > tr > td:nth-child(5) > a:nth-child(2), #data > tbody > tr > td:nth-child(5) > a:nth-child(1), #data > tbody > tr > td:nth-child(5) > button, body > div.container.body-content > p > a {
+        -webkit-text-stroke: medium;
+    }
+
+    #data > tbody > tr > td:nth-child(5) > button {
+        color: sienna;
+        margin-left: -7px;
+    }
+
+        #data > tbody > tr > td:nth-child(5) > button:hover {
+            color: burlywood;
+            text-decoration: none;
+        }
+
+    .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+        max-width: 400px;
+    }
+
+    .odd {
+        background-color: moccasin;
+    }
+
+    .even {
+        background-color: ivory;
+    }
+
+    #data > thead > tr > th:nth-child(4) > p {
+        margin: auto;
+    }
+
+    #data_length > label > select {
+        color: sienna;
+    }
+
+    #data > tbody > tr > td > img, #data > tbody > tr > td {
+        vertical-align: inherit;
+    }
+</style>

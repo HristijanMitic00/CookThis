@@ -1,0 +1,96 @@
+﻿@model Project1.Models.Recipe
+@{
+    ViewBag.Title = "Random recipe";
+}
+
+<h2>Details for the random recipe with name @Model.Name</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Ingridients)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ingridients)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Preparation)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Preparation)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RecipeLink)
+        </dt>
+
+        <dd>
+            <a href="@Model.RecipeLink">Recipe Link</a>
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Image)
+        </dt>
+
+        <dd>
+            <img src="@Model.Image" style="max-width:100px" />
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Difficulty)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Difficulty)
+        </dd>
+
+    </dl>
+</div>
+
+<style>
+    body > div.container.body-content > div > dl > dd:nth-child(4){
+        width:750px;
+    }
+    body {
+        background-color: cornsilk;
+    }
+    body{
+        color:sienna;
+    }
+    body > div.container.body-content > h2{
+        color:sienna;
+        text-align:center
+    }
+    body > div.container.body-content > div > dl > dd:nth-child(8) > a{
+            color:sienna;
+    }
+        body > div.container.body-content > div > dl > dd:nth-child(2), body > div.container.body-content > div > dl > dd:nth-child(12), body > div.container.body-content > div > dl > dd:nth-child(4), body > div.container.body-content > div > dl > dd:nth-child(8) {
+           padding-bottom:30px;
+        }
+
+        body > div.container.body-content > div > dl > dd:nth-child(6) {
+            padding-bottom: 30px;
+            width: 750px;
+        }
+        body > div.container.body-content > div > dl > dd:nth-child(10) {
+            padding-bottom: 30px;
+        }
+        body > div.container.body-content > div > dl > dd:nth-child(8) > a {
+            -webkit-text-stroke: medium;
+        }
+        body > div.container.body-content > div > dl > dd:nth-child(8) > a:hover{
+            color:burlywood;
+        }
+</style>
